@@ -13,11 +13,13 @@ public class Grid
     private int[,] gridArray;
     private float cellSize;
 
+    private Vector3 OriginPos;
     private TextMesh[,] debugTextArray;
-    public Grid(int width,int height, float cellSize){
+    public Grid(int width,int height, float cellSize,Vector3 OriginPos){
         this.height = height;
         this.width = width;
         this.cellSize = cellSize;
+        this.OriginPos = OriginPos;
 
         gridArray = new int[width,height];
         debugTextArray = new TextMesh[width,height];
@@ -37,15 +39,14 @@ public class Grid
         Debug.DrawLine(GetWorldPosition(0,height),GetWorldPosition(width,height),Color.white,100f);
         Debug.DrawLine(GetWorldPosition(width,0),GetWorldPosition(width,height),Color.white,100f);
 
-        SetValue(2,1,56);
     }
 
     private Vector3 GetWorldPosition(int x,int y){
-        return new Vector3(x,y)*cellSize;
+        return new Vector3(x,y)*cellSize+OriginPos;
     }
     private void GetXY(Vector3 Pos,out int x,out int y){
-        x = Mathf.FloorToInt(Pos.x/cellSize);
-        y = Mathf.FloorToInt(Pos.y/cellSize);
+        x = Mathf.FloorToInt((Pos-OriginPos).x/cellSize);
+        y = Mathf.FloorToInt((Pos-OriginPos).y/cellSize);
     }
 
     public void SetValue(int x,int y, int value){
@@ -59,5 +60,21 @@ public class Grid
         int x,y;
         GetXY(pos,out x, out y);
         SetValue(x,y,value);
+    }
+
+    public int GetValue(int x,int y){
+        if (x >=0 && y>=0 && x<width && y<height){
+            return gridArray[x,y];
+        }
+        else{
+            return 0;
+        }
+    }
+
+
+    public int GetValue(Vector3 worldPosition){
+        int x,y;
+        GetXY(worldPosition,out x, out y);
+        return GetValue(x,y);
     }
 }
