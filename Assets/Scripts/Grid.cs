@@ -43,11 +43,21 @@ public class Grid
     private Vector3 GetWorldPosition(int x,int y){
         return new Vector3(x,y)*cellSize;
     }
+    private void GetXY(Vector3 Pos,out int x,out int y){
+        x = Mathf.FloorToInt(Pos.x/cellSize);
+        y = Mathf.FloorToInt(Pos.y/cellSize);
+    }
 
     public void SetValue(int x,int y, int value){
         if (x >=0 && y>=0 && x<width && y<height){
             gridArray[x,y] = value;
             debugTextArray[x,y].text = gridArray[x,y].ToString();
         }
+    }
+
+    public void SetValue(Vector3 pos,int value){
+        int x,y;
+        GetXY(pos,out x, out y);
+        SetValue(x,y,value);
     }
 }
